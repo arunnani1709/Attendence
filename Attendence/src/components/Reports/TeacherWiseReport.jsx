@@ -1,94 +1,83 @@
 import React, { useState, useEffect } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import topicData from "../data/topicData.json";
+import teachersJson from "../data/teachers.json";
 
 const TeacherWiseReport = () => {
   const [teachers, setTeachers] = useState([]);
   const [selectedTeacherId, setSelectedTeacherId] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState(null);
-  const [yearLevels] = useState(["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [subjects, setSubjects] = useState([]);
+  const [availablePhases, setAvailablePhases] = useState([]);
+  const [selectedPhase, setSelectedPhase] = useState("");
+  const [allSubjects, setAllSubjects] = useState([]);
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [selectedSubjectCode, setSelectedSubjectCode] = useState("");
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
+  const [topicSchedule, setTopicSchedule] = useState([]);
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTeachers([
-      {
-        id: 1,
-        name: "Dr. Mehta",
-        subjects: {
-          "1st Year": { name: "Anatomy", code: "ANAT101" },
-          "2nd Year": { name: "Physiology", code: "PHYS201" },
-        },
-      },
-      {
-        id: 2,
-        name: "Dr. Iyer",
-        subjects: {
-          "1st Year": { name: "Biochemistry", code: "BIOC102" },
-          "3rd Year": { name: "Pathology", code: "PATH301" },
-        },
-      },
-      {
-        id: 3,
-        name: "Dr. Shah",
-        subjects: {
-          "2nd Year": { name: "Pharmacology", code: "PHAR202" },
-          "4th Year": { name: "Microbiology", code: "MICR401" },
-        },
-      },
-      {
-        id: 4,
-        name: "Dr. Rani",
-        subjects: {
-          "3rd Year": { name: "Forensic Medicine", code: "FORE302" },
-          "4th Year": { name: "ENT", code: "ENT402" },
-        },
-      },
-      {
-        id: 5,
-        name: "Dr. Thomas",
-        subjects: {
-          "2nd Year": { name: "Community Medicine", code: "COMM203" },
-          "5th Year": { name: "Surgery", code: "SURG501" },
-        },
-      },
-      {
-        id: 6,
-        name: "Dr. Arora",
-        subjects: {
-          "4th Year": { name: "Obstetrics", code: "OBST403" },
-          "5th Year": { name: "Paediatrics", code: "PAED502" },
-        },
-      },
-    ]);
+    setTeachers(teachersJson);
   }, []);
 
   useEffect(() => {
     const teacher = teachers.find((t) => t.id.toString() === selectedTeacherId);
     setSelectedTeacher(teacher);
 
-    if (teacher && selectedYear) {
-      const subject = teacher.subjects[selectedYear];
-      setSubjects(subject ? [subject] : []);
-      setSelectedSubjectCode(subject ? subject.code : "");
+    if (teacher) {
+      const subjectList = teacher.subjects || [];
+      setAllSubjects(subjectList);
     } else {
-      setSubjects([]);
-      setSelectedSubjectCode("");
+      setAllSubjects([]);
     }
-  }, [selectedTeacherId, selectedYear, teachers]);
 
-  const generateReport = () => {
-    if (!selectedTeacher || !selectedSubjectCode || !fromDate || !toDate || !selectedYear) {
-      alert("Please fill all fields before generating the report.");
+    // Reset on teacher change
+    setSelectedPhase("");
+    setSelectedSubjectCode("");
+    setFilteredSubjects([]);
+    setTopicSchedule([]);
+    setReportData(null);
+  }, [selectedTeacherId]);
+
+  useEffect(() => {
+    setAvailablePhases(
+      Object.keys(topicData || {}).flatMap((subjCode) =>
+        Object.keys(topicData[subjCode])
+      )
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!selectedPhase || allSubjects.length === 0) {
+      setFilteredSubjects([]);
+      setSelectedSubjectCode("");
       return;
     }
 
-    const selectedSubject = subjects.find((s) => s.code === selectedSubjectCode);
+    const filtered = allSubjects.filter(
+      (subj) => topicData[subj.code] && topicData[subj.code][selectedPhase]
+    );
+
+    setFilteredSubjects(filtered);
+    setSelectedSubjectCode(filtered.length > 0 ? filtered[0].code : "");
+  }, [selectedPhase, allSubjects]);
+
+  useEffect(() => {
+    if (selectedSubjectCode && selectedPhase && topicData[selectedSubjectCode]) {
+      setTopicSchedule(topicData[selectedSubjectCode][selectedPhase] || []);
+    } else {
+      setTopicSchedule([]);
+    }
+  }, [selectedSubjectCode, selectedPhase]);
+
+  const generateReport = () => {
+    if (!selectedTeacher || !selectedSubjectCode || !selectedPhase) {
+      alert("Please select teacher, phase, and subject.");
+      return;
+    }
+
+    const selectedSubject = filteredSubjects.find(
+      (s) => s.code === selectedSubjectCode
+    );
 
     setLoading(true);
     setTimeout(() => {
@@ -118,8 +107,7 @@ const TeacherWiseReport = () => {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-blue-700">📊 Teacher Wise Attendance Report</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-        {/* Teacher Dropdown */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <select
           value={selectedTeacherId}
           onChange={(e) => setSelectedTeacherId(e.target.value)}
@@ -133,57 +121,36 @@ const TeacherWiseReport = () => {
           ))}
         </select>
 
-        {/* Year Dropdown */}
         <select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
+          value={selectedPhase}
+          onChange={(e) => setSelectedPhase(e.target.value)}
           className="border p-2 rounded"
         >
-          <option value="">Select Year</option>
-          {yearLevels.map((year) => (
-            <option key={year} value={year}>
-              {year}
+          <option value="">Select Phase</option>
+          {[...new Set(availablePhases)].map((phase, idx) => (
+            <option key={idx} value={phase}>
+              {phase}
             </option>
           ))}
         </select>
 
-        {/* Subject Dropdown */}
         <select
           value={selectedSubjectCode}
           onChange={(e) => setSelectedSubjectCode(e.target.value)}
           className="border p-2 rounded"
-          disabled={subjects.length === 0}
+          disabled={filteredSubjects.length === 0}
         >
           <option value="">Select Subject</option>
-          {subjects.map((subj, idx) => (
+          {filteredSubjects.map((subj, idx) => (
             <option key={idx} value={subj.code}>
               {subj.name} ({subj.code})
             </option>
           ))}
         </select>
 
-        {/* From Date */}
-        <DatePicker
-          selected={fromDate}
-          onChange={(date) => setFromDate(date)}
-          placeholderText="From Date"
-          className="border p-2 rounded w-full"
-          dateFormat="yyyy-MM-dd"
-        />
-
-        {/* To Date */}
-        <DatePicker
-          selected={toDate}
-          onChange={(date) => setToDate(date)}
-          placeholderText="To Date"
-          className="border p-2 rounded w-full"
-          dateFormat="yyyy-MM-dd"
-        />
-
-        {/* Generate Button */}
         <button
           onClick={generateReport}
-          className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700"
+          className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 w-fit"
         >
           Generate
         </button>
@@ -227,6 +194,33 @@ const TeacherWiseReport = () => {
             </table>
           </div>
         </>
+      )}
+
+      {topicSchedule.length > 0 && (
+        <div className="bg-white shadow-md p-4 rounded mt-6">
+          <h2 className="text-xl font-semibold mb-2 text-blue-700">📘 Topic Schedule - {selectedPhase}</h2>
+
+          <p className="mb-2 text-sm text-gray-700">
+            <strong>Total Classes Taken:</strong> {topicSchedule.length}
+          </p>
+
+          <table className="table-auto w-full border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="p-2 border">Date</th>
+                <th className="p-2 border">Topic</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topicSchedule.map((item, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="p-2 border">{item.date}</td>
+                  <td className="p-2 border">{item.topic}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
