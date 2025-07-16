@@ -12,6 +12,7 @@ import CompleteReport from "./components/Reports/CompleteReport";
 // import Marks from "./pages/Marks";
 import SubjectWise from "./components/Reports/SubjectWiseReport";
 import DateWiseReport from "./components/Reports/DateWiseReport";
+import TeacherWiseReport from "./components/Reports/TeacherWiseReport";
 // import YearWise from "./pages/YearWise";
 // import Dashboard from "./pages/Dashboard"; // If you have a Dashboard page
 
@@ -31,7 +32,9 @@ function App() {
               {/* <Route path="/admin/attendance" element={<Attendance />} /> */}
               {/* <Route path="/admin/marks" element={<Marks />} /> */}
               <Route path="/admin/subject-wise" element={<SubjectWise />} />
-               <Route path="/admin/month-wise" element={<DateWiseReport />} />
+               <Route path="/admin/date-wise" element={<DateWiseReport />} />
+              <Route path="/admin/teacher-wise" element={<TeacherWiseReport />} />
+
 
               {/* <Route path="/admin/year-wise" element={<YearWise />} /> */}
             </Routes>
