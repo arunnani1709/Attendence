@@ -28,22 +28,7 @@ const Sidebar = () => {
         <NavLink to="/admin/student-wise" className={navLinkStyle}>
           👨‍🎓 Student Wise
         </NavLink>
-
-        <NavLink to="/admin/subject-wise" className={navLinkStyle}>
-          📚 Subject Wise
-        </NavLink>
-
-        <NavLink to="/admin/date-wise" className={navLinkStyle}>
-          📅 Date Wise
-        </NavLink>
-
-        <NavLink to="/admin/month-wise" className={navLinkStyle}>
-          📆 Month Wise
-        </NavLink>
-
-        <NavLink to="/admin/year-wise" className={navLinkStyle}>
-          📅 Year Wise
-        </NavLink>
+        
       </div>
     </div>
   );

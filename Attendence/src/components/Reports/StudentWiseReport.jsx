@@ -6,4 +6,4 @@ const StudentWiseReport = () => {
   )
 }
 
-export default StudentWiseReport
+export default StudentWiseReport;
