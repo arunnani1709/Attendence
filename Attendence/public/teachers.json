@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Mehta",
+    "subjects": [
+      { "name": "Anatomy", "code": "ANAT101" },
+      { "name": "Physiology", "code": "PHYS201" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Dr. Iyer",
+    "subjects": [
+      { "name": "Biochemistry", "code": "BIOC102" },
+      { "name": "Pathology", "code": "PATH301" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Dr. Shah",
+    "subjects": [
+      { "name": "Microbiology", "code": "MICR401" },
+      { "name": "Pharmacology", "code": "PHAR202" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Dr. Rani",
+    "subjects": [
+      { "name": "ENT", "code": "ENT402" },
+      { "name": "Forensic Medicine", "code": "FORE302" }
+    ]
+  }
+]

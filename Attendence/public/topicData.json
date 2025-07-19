@@ -1,0 +1,58 @@
+{
+  "ANAT101": {
+    "Phase 1": [
+      { "date": "2025-01-10", "topic": "Introduction to Human Anatomy" },
+      { "date": "2025-01-12", "topic": "Skeletal System" }
+    ],
+    "Phase 2": [
+      { "date": "2025-04-05", "topic": "Muscular System" },
+      { "date": "2025-04-10", "topic": "Nervous System" }
+    ]
+  },
+  "PHYS201": {
+    "Phase 1": [
+      { "date": "2025-01-08", "topic": "Cell Physiology" },
+      { "date": "2025-01-15", "topic": "Blood Physiology" }
+    ],
+    "Phase 2": [
+      { "date": "2025-04-08", "topic": "Cardiovascular System" },
+      { "date": "2025-04-14", "topic": "Respiratory System" }
+    ]
+  },
+  "BIOC102": {
+    "Phase 1": [
+      { "date": "2025-01-05", "topic": "Biomolecules" },
+      { "date": "2025-01-10", "topic": "Enzymes" }
+    ]
+  },
+  "PATH301": {
+    "Phase 2": [
+      { "date": "2025-04-01", "topic": "Inflammation" },
+      { "date": "2025-04-04", "topic": "Cell Injury" }
+    ]
+  },
+  "MICR401": {
+    "Phase 1": [
+      { "date": "2025-01-07", "topic": "Bacterial Structure" },
+      { "date": "2025-01-11", "topic": "Viral Infections" }
+    ]
+  },
+  "PHAR202": {
+    "Phase 2": [
+      { "date": "2025-04-02", "topic": "Drug Metabolism" },
+      { "date": "2025-04-06", "topic": "Antibiotics" }
+    ]
+  },
+  "ENT402": {
+    "Phase 1": [
+      { "date": "2025-01-06", "topic": "Ear Anatomy" },
+      { "date": "2025-01-09", "topic": "Common ENT Diseases" }
+    ]
+  },
+  "FORE302": {
+    "Phase 2": [
+      { "date": "2025-04-03", "topic": "Forensic Toxicology" },
+      { "date": "2025-04-07", "topic": "Autopsy Procedure" }
+    ]
+  }
+}

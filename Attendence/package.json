@@ -12,15 +12,22 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@tailwindcss/cli": "^4.1.10",
+    "ag-grid-community": "^34.0.2",
+    "ag-grid-enterprise": "^34.0.2",
+    "ag-grid-react": "^34.0.2",
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.3",
     "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.525.0",
+    "pdfmake": "^0.2.20",
     "react": "^19.1.0",
     "react-datepicker": "^8.4.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
+    "react-select": "^5.10.2",
     "tailwindcss": "^4.1.10"
   },
   "devDependencies": {

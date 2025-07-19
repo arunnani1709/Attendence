@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import topicData from "../data/topicData.json";
-import teachersJson from "../data/teachers.json";
 
 const TeacherWiseReport = () => {
   const [teachers, setTeachers] = useState([]);
+  const [topicData, setTopicData] = useState({});
   const [selectedTeacherId, setSelectedTeacherId] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [availablePhases, setAvailablePhases] = useState([]);
@@ -15,10 +14,23 @@ const TeacherWiseReport = () => {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Load teachers from public folder
   useEffect(() => {
-    setTeachers(teachersJson);
+    fetch("/teachers.json")
+      .then((res) => res.json())
+      .then((data) => setTeachers(data))
+      .catch((err) => console.error("Error fetching teachers:", err));
   }, []);
 
+  // Load topicData from public folder
+  useEffect(() => {
+    fetch("/topicData.json")
+      .then((res) => res.json())
+      .then((data) => setTopicData(data))
+      .catch((err) => console.error("Error fetching topic data:", err));
+  }, []);
+
+  // Handle teacher selection
   useEffect(() => {
     const teacher = teachers.find((t) => t.id.toString() === selectedTeacherId);
     setSelectedTeacher(teacher);
@@ -30,7 +42,6 @@ const TeacherWiseReport = () => {
       setAllSubjects([]);
     }
 
-    // Reset on teacher change
     setSelectedPhase("");
     setSelectedSubjectCode("");
     setFilteredSubjects([]);
@@ -38,14 +49,16 @@ const TeacherWiseReport = () => {
     setReportData(null);
   }, [selectedTeacherId]);
 
+  // Extract all phases from topicData
   useEffect(() => {
     setAvailablePhases(
       Object.keys(topicData || {}).flatMap((subjCode) =>
         Object.keys(topicData[subjCode])
       )
     );
-  }, []);
+  }, [topicData]);
 
+  // Filter subjects with available data for selected phase
   useEffect(() => {
     if (!selectedPhase || allSubjects.length === 0) {
       setFilteredSubjects([]);
@@ -59,15 +72,16 @@ const TeacherWiseReport = () => {
 
     setFilteredSubjects(filtered);
     setSelectedSubjectCode(filtered.length > 0 ? filtered[0].code : "");
-  }, [selectedPhase, allSubjects]);
+  }, [selectedPhase, allSubjects, topicData]);
 
+  // Set topic schedule for selected subject and phase
   useEffect(() => {
     if (selectedSubjectCode && selectedPhase && topicData[selectedSubjectCode]) {
       setTopicSchedule(topicData[selectedSubjectCode][selectedPhase] || []);
     } else {
       setTopicSchedule([]);
     }
-  }, [selectedSubjectCode, selectedPhase]);
+  }, [selectedSubjectCode, selectedPhase, topicData]);
 
   const generateReport = () => {
     if (!selectedTeacher || !selectedSubjectCode || !selectedPhase) {
